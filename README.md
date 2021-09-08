@@ -1,16 +1,16 @@
 # flutter_recharge
 
-A new Flutter project.
+A Single Repo for experimentation. use modules. able to plug and play when needed.
 
-## Getting Started
+## Modules
 
-This project is a starting point for a Flutter application.
+see readme inside module for details.
 
-A few resources to get you started if this is your first Flutter project:
+- [ ] Quiz
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- [ ] StyleKit
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Why
+
+Whenever i need to do experimentation with flutter, i have a habit, creating a new repo everytime. \
+but later i ocassionally forgot things and i have no idea where i put 'that little project'.
