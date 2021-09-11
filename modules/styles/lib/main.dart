@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:styles/palette.dart';
-import 'package:styles/text_style_kit.dart';
+import 'package:stylekit/stylekit.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,11 +12,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: TextTheme(
-            headline1: TextStyleKit.extraLarge()
-                .withColor(color: Palette.halfBlack)
-                .w400,
+            headline1: TextStyleKit.extraLarge.fill(color: halfBlack),
           )),
       home: MainApp(),
+      color: Colors.amber,
     );
   }
 }
