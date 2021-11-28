@@ -21,12 +21,27 @@ class ModalInfo extends StatelessWidget {
   }) {
     return showCupertinoDialog(
       context: context,
+      barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
           title: Text(title),
           actions: [
-            TextButton(
+            // TextButton(
+            //   onPressed: onTap,
+            //   child: Text('Ok'),
+            // ),
+            // TextButton(
+            //   onPressed: onTap,
+            //   child: Text('Ok'),
+            // ),
+            CupertinoDialogAction(
               onPressed: onTap,
+              isDestructiveAction: true,
+              child: Text('Cancel'),
+            ),
+            CupertinoDialogAction(
+              onPressed: onTap,
+              isDefaultAction: true,
               child: Text('Ok'),
             ),
           ],
@@ -47,12 +62,16 @@ class ModalInfo extends StatelessWidget {
     required String title,
     required String content,
   }) {
-    return showCupertinoDialog(
+    return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(title),
           actions: [
+            TextButton(
+              onPressed: onTap,
+              child: Text('Cancel'),
+            ),
             TextButton(
               onPressed: onTap,
               child: Text('Ok'),
