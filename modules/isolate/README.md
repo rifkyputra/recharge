@@ -1,16 +1,8 @@
 # isolate
 
-A new Flutter project.
+This Section is about using isolate in an app. For simplicity i only use compute function that has been provided by flutter.
 
-## Getting Started
+i choose factorial because of the algorithm is quite simple. there is an input of how many factorial to calculate. and a toggle to turn on or off the isolate.
 
-This project is a starting point for a Flutter application.
+depends on your device, the bigger factorial eventually will block the main thread when isolate is turned off.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

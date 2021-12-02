@@ -1,18 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: 'Running Isolate',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Material App Bar'),
+          title: Text(
+            'Running Isolate',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        body: ContentWidget(),
+        body: const ContentWidget(),
       ),
     );
   }
@@ -26,54 +34,64 @@ class ContentWidget extends StatefulWidget {
 }
 
 class _ContentWidgetState extends State<ContentWidget> {
+  late ValueNotifier<bool> isIsolate;
+  late ValueNotifier<int> totalFactorial;
+  late ValueNotifier<BigInt> totalResult;
+
+  @override
+  void initState() {
+    isIsolate = ValueNotifier<bool>(false);
+    totalFactorial = ValueNotifier<int>(0);
+    totalResult = ValueNotifier<BigInt>(BigInt.zero);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final totalIsolates = ValueNotifier<int>(0);
-    final totalFactorial = ValueNotifier<int>(0);
-    final totalResult = ValueNotifier<BigInt>(BigInt.zero);
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Running Isolate',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            CircularProgressIndicator(),
-            SizedBox(height: 10),
-            Text('How Many Isolates ?'),
-            SizedBox(height: 5),
-            TextField(
-              onChanged: _assignIntToValue(totalIsolates),
-            ),
-            SizedBox(height: 10),
-            Text('How Many Factorial'),
-            SizedBox(height: 5),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 10),
+            const Text('Use Isolate ?'),
+            const SizedBox(height: 5),
+            useIsolate(context),
+            const SizedBox(height: 10),
+            const Text('How Many Factorial'),
+            const SizedBox(height: 5),
             TextField(
               onChanged: _assignIntToValue(totalFactorial),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             AnimatedBuilder(
-                animation: Listenable.merge(
-                    [totalResult, totalFactorial, totalIsolates]),
+                animation:
+                    Listenable.merge([totalResult, totalFactorial, isIsolate]),
                 builder: (context, _) {
                   return ElevatedButton(
-                    onPressed:
-                        _calculateFactorial(totalResult, totalFactorial.value),
-                    child: Text('Calculate Now'),
+                    onPressed: _calculateFactorial(totalFactorial.value),
+                    child: const Text('Calculate Now'),
                   );
                 }),
-            SizedBox(height: 35),
-            Text('Your Result is : '),
-            SizedBox(height: 10),
+            const SizedBox(height: 35),
+            const Text('Your Result is : '),
+            const SizedBox(height: 10),
             ValueListenableBuilder(
                 valueListenable: totalResult,
-                builder: (context, _, __) {
+                builder: (context, BigInt val, __) {
                   return Text(
-                    totalResult.value.toString(),
+                    (val >
+                                BigInt.
+                            ? BigInt.from(
+                                    9999999999999999999999999999999999999999999)
+                                .toString()
+                            : val.toString())
+                        .toString(),
+                    maxLines: 7,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline5!.copyWith(
                           color: Colors.brown,
                         ),
@@ -85,6 +103,30 @@ class _ContentWidgetState extends State<ContentWidget> {
     );
   }
 
+  Widget useIsolate(BuildContext context) => ValueListenableBuilder(
+        valueListenable: isIsolate,
+        builder: (context, val, _) {
+          return ToggleButtons(
+            borderRadius: BorderRadius.circular(8),
+            children: const [
+              Padding(
+                padding: EdgeInsets.all(7),
+                child: Text('Off'),
+              ),
+              Padding(
+                padding: EdgeInsets.all(7),
+                child: Text('On'),
+              )
+            ],
+            onPressed: (i) {
+              isIsolate.value = !isIsolate.value;
+            },
+            isSelected:
+                isIsolate.value ? const [false, true] : const [true, false],
+          );
+        },
+      );
+
   void Function(String?) _assignIntToValue(
     ValueNotifier<int> notifier,
   ) {
@@ -94,13 +136,23 @@ class _ContentWidgetState extends State<ContentWidget> {
   }
 
   void Function() _calculateFactorial(
-    ValueNotifier<BigInt> notifier,
     int total,
   ) {
     return () async {
-      BigInt result = await compute(calculate, total);
+      try {
+        if (isIsolate.value) {
+          compute(calculate, total)
+              .then((val) => totalResult.value = val)
+              .catchError((e) => print(e));
+        } else {
+          BigInt result;
 
-      notifier.value = result;
+          result = calculate(total);
+          totalResult.value = result;
+        }
+      } catch (e) {
+        //
+      }
     };
   }
 
@@ -109,7 +161,6 @@ class _ContentWidgetState extends State<ContentWidget> {
 
     for (int i = total; i > 1; i--) {
       result = result * (BigInt.from(i) - BigInt.one);
-      print('$i ---> result = $result ');
     }
 
     return result;
