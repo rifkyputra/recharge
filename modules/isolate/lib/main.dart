@@ -83,11 +83,8 @@ class _ContentWidgetState extends State<ContentWidget> {
                 valueListenable: totalResult,
                 builder: (context, BigInt val, __) {
                   return Text(
-                    (val >
-                                BigInt.
-                            ? BigInt.from(
-                                    9999999999999999999999999999999999999999999)
-                                .toString()
+                    (val > BigInt.from(999999999999999999)
+                            ? BigInt.from(999999999999999999).toString()
                             : val.toString())
                         .toString(),
                     maxLines: 7,
